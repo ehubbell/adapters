@@ -1,7 +1,7 @@
 {
   "name": "@ehubbell/adapters",
   "version": "0.0.1",
-  "description": "A collection of adapters for various projects.",
+  "description": "A collection of networking adapters for various projects.",
   "author": "Eric Hubbell<eric@erichubbell.com>",
   "license": "ISC",
   "main": "dist/index.cjs.js",
