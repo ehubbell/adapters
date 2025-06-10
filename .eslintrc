@@ -1,0 +1,33 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+		"plugin:eqeqeq-fix/recommended",
+		"plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "unused-imports"
+  ],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": [
+		"dist",
+		"**/*.cjs",
+		"**/*.js"
+	],
+  "rules": {
+    "eqeqeq": "error",
+    "unused-imports/no-unused-imports": "error",
+    "no-multi-spaces": "error",
+		"no-multiple-empty-lines": "error",
+    "react-hooks/exhaustive-deps": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-unused-vars": "off"
+  }
+}
