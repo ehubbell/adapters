@@ -9,7 +9,7 @@ export function pushBuild() {
 		closeBundle: async () => {
 			exec('dts-bundle-generator --config dts.config.ts', (response, error) => {
 				if (error) console.error(error);
-				console.log(response)
+				// console.log(response);
 				exec('npx yalc push', (response, error) => (error ? console.error(error) : null));
 			});
 		},
@@ -27,14 +27,7 @@ export default defineConfig({
 			fileName: format => `index.${format}.js`,
 		},
 		rollupOptions: {
-			external: ['https', 'react', 'react-dom', 'react/jsx-runtime'],
-			output: {
-				globals: {
-					react: 'React',
-					'react-dom': 'ReactDOM',
-					'react/jsx-runtime': 'react/jsx-runtime',
-				},
-			},
+			external: ['https'],
 			plugins: [peerDepsExternal()],
 		},
 	},
