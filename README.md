@@ -1,13 +1,8 @@
 # Overview
-This library offers a collection of networking adapters for various projects.
+A collection of networking adapters for various projects.
 Each adapter offers a wrapper around a base networking library (ie `cross-fetch`) that will simplify your implementation while covering basic use-cases.
-For more advanced scenarios, you can unpack the logic in each adapter and tailor it to your use-case.
-By abstracting this logic into a package, we can dramatically reduce the boilerplate code we bring from project to project.
-
-## Prerequisites
-- Git
-- Node
-- NPM
+For advanced scenarios, you can unpack the logic in each adapter and tailor it to your use-case.
+By abstracting this logic into a package, we're able to reduce and consolidate the boilerplate code necessary for each project.
 
 ## Installation
 ```
@@ -18,7 +13,7 @@ npm install @ehubbell/adapters
 ```tsx
 import React from 'react';
 
-import { BaseAdapter, jsonApiNormalize, jsonApiNormalizeArray, jsonApiSerialize, jsonApiSerializeArray } from '@ehubbell/adapters';
+import { BaseAdapter } from '@ehubbell/adapters';
 
 const StoreContext = React.createContext(null);
 
@@ -33,10 +28,7 @@ const StoreProvider = ({ children }) => {
 
 	// Render
 	return (
-		<StoreContext.Provider
-			value={{
-				request,
-			}}>
+		<StoreContext.Provider value={{ request }}>
 			{children}
 		</StoreContext.Provider>
 	);
