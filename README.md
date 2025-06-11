@@ -1,19 +1,62 @@
 # Overview
- A lightweight vite-based NPM package starter.
+This library offers a collection of networking adapters for various projects.
+Each adapter offers a wrapper around a base networking library (ie `cross-fetch`) that will simplify your implementation while covering basic use-cases.
+For more advanced scenarios, you can unpack the logic in each adapter and tailor it to your use-case.
+By abstracting this logic into a package, we can dramatically reduce the boilerplate code we bring from project to project.
 
 ## Prerequisites
 - Git
 - Node
 - NPM
 
-## Quick Start
-- npm install
-- npm start
+## Installation
+```
+npm install @ehubbell/adapters
+```
+
+## Usage
+```tsx
+import React from 'react';
+
+import { BaseAdapter, jsonApiNormalize, jsonApiNormalizeArray, jsonApiSerialize, jsonApiSerializeArray } from '@ehubbell/adapters';
+
+const StoreContext = React.createContext(null);
+
+const StoreProvider = ({ children }) => {
+	// Computed
+	const client = new BaseAdapter({ domain: process.env.NEXT_PUBLIC_API_DOMAIN });
+
+	// Methods
+	const request = async ({ method = 'GET', url, headers, params, data }) => {
+		return await client.apiRequest({ method, url, headers, params, data });
+	};
+
+	// Render
+	return (
+		<StoreContext.Provider
+			value={{
+				request,
+			}}>
+			{children}
+		</StoreContext.Provider>
+	);
+};
+
+const useStore = () => {
+	return React.useContext(StoreContext);
+};
+
+export { StoreProvider, useStore };
+```
+
 
 ## Development
-- npm link
+This project uses [yalc](https://npmjs.com/package/yalc) for local development.
+- npm run dev
 - switch to project
-- npm link <package_name>
+- npx yalc add @playbooks/theme
+- You may need to restart your application server
+- After that, this library will hot reload into the consuming application
 
 ## Scripts
 - We've included a couple of helpful scripts for faster development.
@@ -25,5 +68,11 @@
 - Edit the `.husky/pre-commit` file to change your settings
 
 ## Author
-- Eric Hubbell
+- [Eric Hubbell](http://www.erichubbell.com)
 - eric@erichubbell.com
+
+## Notes
+To see this library in action, checkout the following projects:
+- [playbooks](https://www.playbooks.xyz)
+- [@playbooks/ui](https://github.com/playbooks-xyz/playbooks-ui)
+- [@playbooks/theme](https://github.com/playbooks-xyz/playbooks-theme)

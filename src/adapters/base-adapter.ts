@@ -70,7 +70,6 @@ class BaseAdapter implements BaseAdapterProps {
 	}
 
 	async apiRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
-		await sleep(300);
 		if (this.debug) logger.info(`apiRequest: `, { method, url, params, data });
 		const [date, response] = await this.buildAndMakeRequest({ method, url, headers, params, data });
 		if (this.debug) logger.info(`apiResponse (${date}): `, { method, url, params, response });
