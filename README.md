@@ -27,11 +27,7 @@ const StoreProvider = ({ children }) => {
 	};
 
 	// Render
-	return (
-		<StoreContext.Provider value={{ request }}>
-			{children}
-		</StoreContext.Provider>
-	);
+	return <StoreContext.Provider value={{ request }}>{children}</StoreContext.Provider>;
 };
 
 const useStore = () => {
@@ -39,6 +35,7 @@ const useStore = () => {
 };
 
 export { StoreProvider, useStore };
+
 ```
 
 
@@ -46,9 +43,8 @@ export { StoreProvider, useStore };
 This project uses [yalc](https://npmjs.com/package/yalc) for local development.
 - npm run dev
 - switch to project
-- npx yalc add @playbooks/theme
-- You may need to restart your application server
-- After that, this library will hot reload into the consuming application
+- npx yalc add @ehubbell/adapters
+- After that, this library should hot reload into the consuming application
 
 ## Scripts
 - We've included a couple of helpful scripts for faster development.
@@ -66,5 +62,5 @@ This project uses [yalc](https://npmjs.com/package/yalc) for local development.
 ## Notes
 To see this library in action, checkout the following projects:
 - [playbooks](https://www.playbooks.xyz)
-- [@playbooks/ui](https://github.com/playbooks-xyz/playbooks-ui)
-- [@playbooks/theme](https://github.com/playbooks-xyz/playbooks-theme)
+- [playbooks blog](https://blog.playbooks.xyz)
+- [playbooks docs](https://docs.playbooks.xyz)
