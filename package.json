@@ -1,6 +1,6 @@
 {
   "name": "@ehubbell/adapters",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A collection of networking adapters for various projects.",
   "author": "Eric Hubbell<eric@erichubbell.com>",
   "license": "ISC",
