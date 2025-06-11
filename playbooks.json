@@ -1,5 +1,0 @@
-{
-  "name": "Vite Basic Package Starter",
-  "uuid": "vite-basic-package-starter",
-  "description": "This repository provides a basic starter template for creating lightweight NPM packages using Vite. It includes essential scripts for development, deployment, testing, and publishing. It also comes with a preset VSCode terminal configuration for faster development."
-}
