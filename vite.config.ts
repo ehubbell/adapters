@@ -9,33 +9,37 @@ export function pushBuild() {
 		closeBundle: async () => {
 			exec('dts-bundle-generator --config dts.config.ts', (response, error) => {
 				if (error) console.error(error);
-				// console.log(response);
+				if (response) console.log(response);
 				exec('npx yalc push', (response, error) => (error ? console.error(error) : null));
 			});
 		},
 	};
 }
 
-export default defineConfig({
-	base: './',
-	build: {
-		lib: {
-			entry: path.resolve(__dirname, 'src/index.ts'),
-			name: 'Adapters',
-			formats: ['es', 'cjs'],
-			fileName: format => `index.${format}.js`,
+export default defineConfig(({ mode }) => {
+	const plugins = mode !== 'production' ? [pushBuild()] : [];
+
+	return {
+		base: './',
+		build: {
+			lib: {
+				entry: path.resolve(__dirname, 'src/index.ts'),
+				name: 'Adapters',
+				formats: ['es', 'cjs'],
+				fileName: format => `index.${format}.js`,
+			},
+			rollupOptions: {
+				external: ['https'],
+				plugins: [peerDepsExternal()],
+			},
 		},
-		rollupOptions: {
-			external: ['https'],
-			plugins: [peerDepsExternal()],
+		plugins,
+		resolve: {
+			alias: {
+				src: path.resolve(__dirname, '/src'),
+				adapters: path.resolve(__dirname, '/src/adapters'),
+				utils: path.resolve(__dirname, '/src/utils'),
+			},
 		},
-	},
-	plugins: [pushBuild()],
-	resolve: {
-		alias: {
-			src: path.resolve(__dirname, '/src'),
-			adapters: path.resolve(__dirname, '/src/adapters'),
-			utils: path.resolve(__dirname, '/src/utils'),
-		},
-	},
+	};
 });
