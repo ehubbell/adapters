@@ -1,14 +1,13 @@
 import fetch from 'cross-fetch';
 import Https from 'https';
-import { env, isArray, isEmpty, isObject, sleep, timeElapsed } from 'utils';
-import * as logger from 'utils/logger';
+import { env, logger, isArray, isEmpty, isObject, sleep, timeElapsed } from '@ehubbell/utils';
 
-export type BaseAdapterProps = {
+export type AdapterProps = {
 	domain?: string;
 	debug?: boolean;
 };
 
-export type iAdapterRequest = {
+export type requestProps = {
 	method?: string;
 	url?: string;
 	headers?: any;
@@ -16,11 +15,11 @@ export type iAdapterRequest = {
 	data?: any | any[];
 };
 
-class BaseAdapter implements BaseAdapterProps {
+class BaseAdapter implements AdapterProps {
 	domain: string;
 	debug?: boolean;
 
-	constructor({ domain, debug }: BaseAdapterProps) {
+	constructor({ domain, debug }: AdapterProps) {
 		this.domain = domain;
 		this.debug = debug || false;
 	}
@@ -56,35 +55,35 @@ class BaseAdapter implements BaseAdapterProps {
 		return formattedOptions;
 	}
 
-	formatRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
+	formatRequest({ method = 'GET', url, headers, params, data }) {
 		const date = new Date();
 		const formattedUrl = this.formatUrl(url, params);
 		const formattedOptions = this.formatOptions(method, headers, data);
 		return { date, formattedUrl, formattedOptions };
 	}
 
-	async formatAndMakeRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
+	async request({ method = 'GET', url, headers, params, data }: requestProps) {
 		const { date, formattedUrl, formattedOptions } = this.formatRequest({ method, url, headers, params, data });
 		const response = await this.client(formattedUrl, formattedOptions);
 		return [timeElapsed(date), response];
 	}
 
-	async apiRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
+	async apiRequest({ method = 'GET', url, headers, params, data }: requestProps) {
 		if (this.debug) logger.info(`apiRequest: `, { method, url, params, data });
-		const [date, response] = await this.formatAndMakeRequest({ method, url, headers, params, data });
+		const [date, response] = await this.request({ method, url, headers, params, data });
 		if (this.debug) logger.info(`apiResponse (${date}): `, { method, url, params, response });
 		return response;
 	}
 
-	async storeRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
+	async storeRequest({ method = 'GET', url, headers, params, data }: requestProps) {
 		if (env === 'development') await sleep(300);
 		if (this.debug) logger.info(`storeRequest: `, { method, url, params, data });
-		const [date, response] = await this.formatAndMakeRequest({ method, url, headers, params, data });
+		const [date, response] = await this.request({ method, url, headers, params, data });
 		if (this.debug) logger.info(`storeResponse (${date}): `, { method, url, params, response });
 		return response;
 	}
 
-	async downloadRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
+	async downloadRequest({ method = 'GET', url, headers, params, data }: requestProps) {
 		if (env === 'development') await sleep(300);
 		if (this.debug) logger.info(`downloadRequest: `, { method, url, params, data });
 		const { date, formattedUrl, formattedOptions } = await this.formatRequest({ method, url, headers, params, data });

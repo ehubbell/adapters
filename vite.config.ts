@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
 				entry: path.resolve(__dirname, 'src/index.ts'),
 				name: 'Adapters',
 				formats: ['es', 'cjs'],
-				fileName: format => `index.${format}.js`,
+				fileName: (format, entryName) => (format === 'es' ? `${entryName}.mjs` : `${entryName}.cjs`),
 			},
 			rollupOptions: {
 				external: ['https'],

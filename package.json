@@ -4,8 +4,8 @@
   "description": "A collection of networking adapters for various projects.",
   "author": "Eric Hubbell<eric@erichubbell.com>",
   "license": "ISC",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.es.js",
+  "type": "module",
+  "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@ehubbell/utils": "^0.0.6",
     "cross-fetch": "^4.1.0",
     "dayjs": "^1.11.13"
   },
