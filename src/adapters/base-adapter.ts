@@ -20,7 +20,7 @@ class BaseAdapter implements BaseAdapterProps {
 	domain: string;
 	debug?: boolean;
 
-	constructor({ domain, debug }) {
+	constructor({ domain, debug }: BaseAdapterProps) {
 		this.domain = domain;
 		this.debug = debug || false;
 	}
@@ -35,16 +35,7 @@ class BaseAdapter implements BaseAdapterProps {
 		return await response.json();
 	}
 
-	formatOptions(method, headers, data?) {
-		const formattedOptions = {};
-		formattedOptions['method'] = method;
-		formattedOptions['headers'] = { ['Content-Type']: 'application/json', ...headers };
-		formattedOptions['body'] = JSON.stringify(data);
-		if (env === 'development') formattedOptions['agent'] = new Https.Agent({ rejectUnauthorized: false });
-		return formattedOptions;
-	}
-
-	formatUrl(url, params): URL {
+	formatUrl(url: string, params: any = {}): URL {
 		const formattedUrl = new URL(this.domain + url);
 		Object.keys(params).map(key => {
 			const value = params[key];
@@ -56,22 +47,31 @@ class BaseAdapter implements BaseAdapterProps {
 		return formattedUrl;
 	}
 
-	async buildRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
+	formatOptions(method, headers, data?) {
+		const formattedOptions = {};
+		formattedOptions['method'] = method;
+		formattedOptions['headers'] = { ['Content-Type']: 'application/json', ...headers };
+		formattedOptions['body'] = JSON.stringify(data);
+		if (env === 'development') formattedOptions['agent'] = new Https.Agent({ rejectUnauthorized: false });
+		return formattedOptions;
+	}
+
+	formatRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
 		const date = new Date();
 		const formattedUrl = this.formatUrl(url, params);
 		const formattedOptions = this.formatOptions(method, headers, data);
 		return { date, formattedUrl, formattedOptions };
 	}
 
-	async buildAndMakeRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
-		const { date, formattedUrl, formattedOptions } = await this.buildRequest({ method, url, headers, params, data });
+	async formatAndMakeRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
+		const { date, formattedUrl, formattedOptions } = this.formatRequest({ method, url, headers, params, data });
 		const response = await this.client(formattedUrl, formattedOptions);
 		return [timeElapsed(date), response];
 	}
 
 	async apiRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
 		if (this.debug) logger.info(`apiRequest: `, { method, url, params, data });
-		const [date, response] = await this.buildAndMakeRequest({ method, url, headers, params, data });
+		const [date, response] = await this.formatAndMakeRequest({ method, url, headers, params, data });
 		if (this.debug) logger.info(`apiResponse (${date}): `, { method, url, params, response });
 		return response;
 	}
@@ -79,7 +79,7 @@ class BaseAdapter implements BaseAdapterProps {
 	async storeRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
 		if (env === 'development') await sleep(300);
 		if (this.debug) logger.info(`storeRequest: `, { method, url, params, data });
-		const [date, response] = await this.buildAndMakeRequest({ method, url, headers, params, data });
+		const [date, response] = await this.formatAndMakeRequest({ method, url, headers, params, data });
 		if (this.debug) logger.info(`storeResponse (${date}): `, { method, url, params, response });
 		return response;
 	}
@@ -87,7 +87,7 @@ class BaseAdapter implements BaseAdapterProps {
 	async downloadRequest({ method = 'GET', url, headers, params, data }: iAdapterRequest) {
 		if (env === 'development') await sleep(300);
 		if (this.debug) logger.info(`downloadRequest: `, { method, url, params, data });
-		const { date, formattedUrl, formattedOptions } = await this.buildRequest({ method, url, headers, params, data });
+		const { date, formattedUrl, formattedOptions } = await this.formatRequest({ method, url, headers, params, data });
 		const response = await fetch(formattedUrl, formattedOptions);
 		if (this.debug) logger.info(`downloadResponse (${date}): `, { method, url, params, response });
 		if (!response.ok) {
