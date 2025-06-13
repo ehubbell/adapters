@@ -3,26 +3,26 @@ import Https from 'https';
 import { env, isArray, isEmpty, isObject, sleep, timeElapsed } from 'utils';
 import * as logger from 'utils/logger';
 
-export interface BaseAdapterProps {
+export type BaseAdapterProps = {
 	domain?: string;
 	debug?: boolean;
-}
+};
 
-export interface iAdapterRequest {
+export type iAdapterRequest = {
 	method?: string;
 	url?: string;
 	headers?: any;
 	params?: any;
 	data?: any | any[];
-}
+};
 
 class BaseAdapter implements BaseAdapterProps {
-	domain;
-	debug;
+	domain: string;
+	debug?: boolean;
 
-	constructor(props) {
-		this.domain = props?.domain || process.env.NEXT_PUBLIC_API_DOMAIN;
-		this.debug = props?.debug;
+	constructor({ domain, debug }) {
+		this.domain = domain;
+		this.debug = debug || false;
 	}
 
 	// Private
